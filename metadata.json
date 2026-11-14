@@ -1,0 +1,6 @@
+{
+  "name": "DECO ACADEMY",
+  "description": "A complete five-unit engineering learning platform for U24EC304 Digital Electronics & Computer Organization (DECO), featuring detailed notes, logic & circuit diagrams, worked examples, exam preparation, formula library, and interactive digital labs.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
