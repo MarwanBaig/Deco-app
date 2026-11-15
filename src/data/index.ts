@@ -3,9 +3,25 @@ import { UNIT_2, UNIT_2_EXAM_QUESTIONS, UNIT_2_QUIZZES } from './unit2';
 import { UNIT_3, UNIT_3_EXAM_QUESTIONS, UNIT_3_QUIZZES } from './unit3';
 import { UNIT_4, UNIT_4_EXAM_QUESTIONS, UNIT_4_QUIZZES } from './unit4';
 import { UNIT_5, UNIT_5_EXAM_QUESTIONS, UNIT_5_QUIZZES } from './unit5';
-import { Chapter, ExamQuestion, FormulaItem, QuizQuestion, Unit, UnitId } from '../types/academic';
+import { LESSON_ENRICHMENT, UNIT_LEARNING_OBJECTIVES } from './lessonEnrichment';
+import { EXTRA_ASSESSMENT_QUIZZES } from './extraAssessments';
+import {
+  Chapter,
+  ExamQuestion,
+  FormulaItem,
+  LessonEnrichment,
+  QuizQuestion,
+  Unit,
+  UnitId
+} from '../types/academic';
 
-export const ALL_UNITS: Unit[] = [UNIT_1, UNIT_2, UNIT_3, UNIT_4, UNIT_5];
+const RAW_UNITS: Unit[] = [UNIT_1, UNIT_2, UNIT_3, UNIT_4, UNIT_5];
+
+export const ALL_UNITS: Unit[] = RAW_UNITS.map((u) => ({
+  ...u,
+  learningObjectives: UNIT_LEARNING_OBJECTIVES[u.id]?.objectives,
+  unitOutcome: UNIT_LEARNING_OBJECTIVES[u.id]?.outcome
+}));
 
 export const ALL_CHAPTERS: Chapter[] = ALL_UNITS.flatMap((u) => u.chapters);
 
@@ -17,14 +33,18 @@ export const ALL_EXAM_QUESTIONS: ExamQuestion[] = [
   ...UNIT_3_EXAM_QUESTIONS,
   ...UNIT_4_EXAM_QUESTIONS,
   ...UNIT_5_EXAM_QUESTIONS
-];
+].map((q) => ({
+  ...q,
+  isImportant: q.isImportant ?? (q.marks === 'long-answer' || q.marks === '5-mark')
+}));
 
 export const ALL_QUIZ_QUESTIONS: QuizQuestion[] = [
   ...UNIT_1_QUIZZES,
   ...UNIT_2_QUIZZES,
   ...UNIT_3_QUIZZES,
   ...UNIT_4_QUIZZES,
-  ...UNIT_5_QUIZZES
+  ...UNIT_5_QUIZZES,
+  ...EXTRA_ASSESSMENT_QUIZZES
 ];
 
 export function getUnitById(unitId: UnitId): Unit | undefined {
@@ -33,6 +53,20 @@ export function getUnitById(unitId: UnitId): Unit | undefined {
 
 export function getChapterById(chapterId: string): Chapter | undefined {
   return ALL_CHAPTERS.find((c) => c.id === chapterId);
+}
+
+export function getLessonEnrichment(chapterId: string): LessonEnrichment {
+  return (
+    LESSON_ENRICHMENT[chapterId] || {
+      learningObjectives: [],
+      commonMistakes: [],
+      notebookNotes: []
+    }
+  );
+}
+
+export function getExamQuestionsForChapter(chapterId: string): ExamQuestion[] {
+  return ALL_EXAM_QUESTIONS.filter((q) => q.chapterId === chapterId);
 }
 
 export function getAdjacentChapters(chapterId: string): { prev: Chapter | null; next: Chapter | null } {

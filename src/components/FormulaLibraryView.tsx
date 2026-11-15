@@ -44,7 +44,7 @@ export function FormulaLibraryView({ initialUnitId, onNavigate }: FormulaLibrary
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search formulas, Boolean laws, flip-flop equations, cache formulas..."
-            className="w-full pl-10 pr-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#11192B] text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-500"
+            className="w-full pl-10 pr-4 py-2 rounded-lg border border-[#DCE3DC] dark:border-[#253830] bg-white dark:bg-[#13201B] text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#1B4332] dark:focus:ring-[#52B788]"
           />
         </div>
 
@@ -53,8 +53,8 @@ export function FormulaLibraryView({ initialUnitId, onNavigate }: FormulaLibrary
             onClick={() => setUnitFilter('all')}
             className={`px-3 py-2 rounded-lg text-xs font-medium border cursor-pointer ${
               unitFilter === 'all'
-                ? 'bg-sky-600 text-white border-sky-600'
-                : 'border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                ? 'bg-[#1B4332] dark:bg-[#2D6A4F] text-white border-[#1B4332] dark:border-[#2D6A4F]'
+                : 'border-[#DCE3DC] dark:border-[#253830] text-slate-700 dark:text-slate-300'
             }`}
           >
             All ({ALL_FORMULAS.length})
@@ -65,8 +65,8 @@ export function FormulaLibraryView({ initialUnitId, onNavigate }: FormulaLibrary
               onClick={() => setUnitFilter(u.id)}
               className={`px-3 py-2 rounded-lg text-xs font-medium border cursor-pointer ${
                 unitFilter === u.id
-                  ? 'bg-sky-600 text-white border-sky-600'
-                  : 'border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                  ? 'bg-[#1B4332] dark:bg-[#2D6A4F] text-white border-[#1B4332] dark:border-[#2D6A4F]'
+                  : 'border-[#DCE3DC] dark:border-[#253830] text-slate-700 dark:text-slate-300'
               }`}
             >
               {u.number}
@@ -76,7 +76,7 @@ export function FormulaLibraryView({ initialUnitId, onNavigate }: FormulaLibrary
       </div>
 
       {filtered.length === 0 ? (
-        <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#11192B] p-8 text-center text-sm text-slate-500">
+        <div className="rounded-xl border border-[#DCE3DC] dark:border-[#253830] bg-white dark:bg-[#13201B] p-8 text-center text-sm text-slate-500">
           No formulas match "{query}".
         </div>
       ) : (
@@ -86,16 +86,16 @@ export function FormulaLibraryView({ initialUnitId, onNavigate }: FormulaLibrary
             return (
               <div
                 key={f.id}
-                className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#11192B] p-5 space-y-3 flex flex-col justify-between"
+                className="rounded-xl border border-[#DCE3DC] dark:border-[#253830] bg-white dark:bg-[#13201B] p-5 space-y-3 flex flex-col justify-between"
               >
                 <div className="space-y-3">
                   <div className="flex items-center justify-between gap-2 text-xs text-slate-500 dark:text-slate-400">
-                    <span className="font-semibold text-sky-600 dark:text-sky-400">
+                    <span className="font-semibold text-[#0F766E] dark:text-[#2DD4BF]">
                       {u?.number} · {f.chapterTitle}
                     </span>
                     <button
                       onClick={() => onNavigate({ page: 'chapter', chapterId: f.chapterId })}
-                      className="inline-flex items-center gap-1 hover:text-sky-500 cursor-pointer shrink-0"
+                      className="inline-flex items-center gap-1 hover:text-[#1B4332] dark:hover:text-[#52B788] cursor-pointer shrink-0"
                     >
                       <span>Chapter</span>
                       <ExternalLink className="w-3 h-3" />
@@ -104,7 +104,7 @@ export function FormulaLibraryView({ initialUnitId, onNavigate }: FormulaLibrary
 
                   <h2 className="text-base font-bold text-slate-900 dark:text-slate-50">{f.name}</h2>
 
-                  <div className="rounded-lg bg-slate-50 dark:bg-slate-900/70 p-3 border border-slate-200 dark:border-slate-800">
+                  <div className="rounded-lg bg-slate-50 dark:bg-slate-900/70 p-3 border border-[#DCE3DC] dark:border-[#253830]">
                     <MathBlock latex={f.latex} />
                   </div>
 
@@ -113,7 +113,7 @@ export function FormulaLibraryView({ initialUnitId, onNavigate }: FormulaLibrary
                     <ul className="space-y-0.5 pl-1">
                       {f.symbols.map((s) => (
                         <li key={s.symbol}>
-                          <code className="font-mono text-sky-600 dark:text-sky-400">{s.symbol}</code> — {s.meaning}
+                          <code className="font-mono text-[#0F766E] dark:text-[#2DD4BF]">{s.symbol}</code> — {s.meaning}
                         </li>
                       ))}
                     </ul>

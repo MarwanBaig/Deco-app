@@ -3,6 +3,7 @@ import {
   Bookmark,
   CheckCircle2,
   Download,
+  Lightbulb,
   Printer,
   Search
 } from 'lucide-react';
@@ -126,7 +127,7 @@ export function NotesView({
             onClick={() => setReadingMode('detailed')}
             className={`px-3.5 py-1.5 text-xs sm:text-sm font-semibold rounded-md transition-colors whitespace-nowrap cursor-pointer ${
               readingMode === 'detailed'
-                ? 'bg-white dark:bg-[#11192B] text-slate-900 dark:text-slate-50 shadow-sm'
+                ? 'bg-white dark:bg-[#13201B] text-slate-900 dark:text-slate-50 shadow-sm'
                 : 'text-slate-600 dark:text-slate-300'
             }`}
           >
@@ -136,7 +137,7 @@ export function NotesView({
             onClick={() => setReadingMode('quick')}
             className={`px-3.5 py-1.5 text-xs sm:text-sm font-semibold rounded-md transition-colors whitespace-nowrap cursor-pointer ${
               readingMode === 'quick'
-                ? 'bg-white dark:bg-[#11192B] text-slate-900 dark:text-slate-50 shadow-sm'
+                ? 'bg-white dark:bg-[#13201B] text-slate-900 dark:text-slate-50 shadow-sm'
                 : 'text-slate-600 dark:text-slate-300'
             }`}
           >
@@ -154,7 +155,7 @@ export function NotesView({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search within notes, definitions, or chapters..."
-            className="w-full pl-10 pr-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#11192B] text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-sky-500"
+            className="w-full pl-10 pr-4 py-2 rounded-lg border border-[#DCE3DC] dark:border-[#253830] bg-white dark:bg-[#13201B] text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#1B4332] dark:focus:ring-[#52B788]"
           />
         </div>
 
@@ -163,8 +164,8 @@ export function NotesView({
             onClick={() => setSelectedUnit('all')}
             className={`px-3 py-2 rounded-lg text-xs font-medium cursor-pointer border transition-colors ${
               selectedUnit === 'all'
-                ? 'bg-sky-600 text-white border-sky-600'
-                : 'border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                ? 'bg-[#1B4332] dark:bg-[#2D6A4F] text-white border-[#1B4332] dark:border-[#2D6A4F]'
+                : 'border-[#DCE3DC] dark:border-[#253830] text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
             All Units
@@ -175,8 +176,8 @@ export function NotesView({
               onClick={() => setSelectedUnit(u.id)}
               className={`px-3 py-2 rounded-lg text-xs font-medium cursor-pointer border transition-colors ${
                 selectedUnit === u.id
-                  ? 'bg-sky-600 text-white border-sky-600'
-                  : 'border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  ? 'bg-[#1B4332] dark:bg-[#2D6A4F] text-white border-[#1B4332] dark:border-[#2D6A4F]'
+                  : 'border-[#DCE3DC] dark:border-[#253830] text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
               {u.number}
@@ -187,7 +188,7 @@ export function NotesView({
             className={`px-3 py-2 rounded-lg text-xs font-medium cursor-pointer border transition-colors ${
               selectedUnit === 'favourites'
                 ? 'bg-amber-600 text-white border-amber-600'
-                : 'border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                : 'border-[#DCE3DC] dark:border-[#253830] text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
             Favourites ({progress.favouriteChapters.length})
@@ -198,7 +199,7 @@ export function NotesView({
       {/* Main Split Workspace */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Chapter List */}
-        <aside className="lg:col-span-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#11192B] max-h-[600px] overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800 no-print">
+        <aside className="lg:col-span-4 rounded-xl border border-[#DCE3DC] dark:border-[#253830] bg-white dark:bg-[#13201B] max-h-[600px] overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800 no-print">
           {filteredChapters.length === 0 ? (
             <div className="p-6 text-center text-sm text-slate-500">
               No matching notes found. Try clearing your filter or search term.
@@ -208,18 +209,21 @@ export function NotesView({
               const isSelected = activeChapter?.id === ch.id;
               const isDone = progress.completedChapters.includes(ch.id);
               const isFav = progress.favouriteChapters.includes(ch.id);
+              const unitObj = getUnitById(ch.unitId);
               return (
                 <button
                   key={ch.id}
                   onClick={() => selectChapter(ch)}
                   className={`w-full text-left p-3.5 transition-colors cursor-pointer ${
                     isSelected
-                      ? 'bg-sky-500/10 text-sky-700 dark:text-sky-300'
+                      ? 'bg-[#E8EFE9]/75 dark:bg-[#1D3329] text-[#1B4332] dark:text-[#8CE0B0]'
                       : 'hover:bg-slate-50 dark:hover:bg-slate-800/40 text-slate-800 dark:text-slate-200'
                   }`}
                 >
                   <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-                    <span className="font-semibold">Ch {ch.chapterNumber}</span>
+                    <span className="font-semibold">
+                      {unitObj?.number} · Lesson {ch.chapterNumber}
+                    </span>
                     <span className="flex items-center gap-1.5">
                       {isFav && <Bookmark className="w-3.5 h-3.5 text-amber-500" />}
                       {isDone && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />}
@@ -233,14 +237,14 @@ export function NotesView({
         </aside>
 
         {/* Note Content Pane */}
-        <div className="lg:col-span-8 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#11192B] p-6 space-y-6 print-area">
+        <div className="lg:col-span-8 rounded-xl border border-[#DCE3DC] dark:border-[#253830] bg-white dark:bg-[#13201B] p-6 space-y-6 print-area deco-prose">
           {!activeChapter || !activeUnit ? (
             <p className="text-sm text-slate-500 py-8 text-center">Select a chapter to view notes.</p>
           ) : (
             <>
-              <div className="flex flex-wrap items-start justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
+              <div className="flex flex-wrap items-start justify-between gap-4 pb-4 border-b border-[#DCE3DC] dark:border-[#253830]">
                 <div>
-                  <p className="text-xs font-semibold text-sky-600 dark:text-sky-400">
+                  <p className="text-xs font-semibold text-[#0F766E] dark:text-[#2DD4BF]">
                     {activeUnit.number}: {activeUnit.title} · Chapter {activeChapter.chapterNumber}
                   </p>
                   <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-slate-50 mt-1">
@@ -254,7 +258,7 @@ export function NotesView({
                     className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-medium cursor-pointer ${
                       progress.favouriteChapters.includes(activeChapter.id)
                         ? 'border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-400'
-                        : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'
+                        : 'border-[#DCE3DC] dark:border-[#253830] text-slate-600 dark:text-slate-300'
                     }`}
                   >
                     <Bookmark className="w-3.5 h-3.5" />
@@ -265,7 +269,7 @@ export function NotesView({
                     className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer ${
                       progress.completedChapters.includes(activeChapter.id)
                         ? 'bg-emerald-600 text-white'
-                        : 'bg-sky-600 text-white'
+                        : 'bg-[#1B4332] dark:bg-[#2D6A4F] text-white'
                     }`}
                   >
                     <CheckCircle2 className="w-3.5 h-3.5" />
@@ -273,14 +277,14 @@ export function NotesView({
                   </button>
                   <button
                     onClick={() => handleDownloadNotes(activeChapter)}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#DCE3DC] dark:border-[#253830] text-xs font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
                   >
                     <Download className="w-3.5 h-3.5" />
                     <span>Download .md</span>
                   </button>
                   <button
                     onClick={() => window.print()}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#DCE3DC] dark:border-[#253830] text-xs font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
                   >
                     <Printer className="w-3.5 h-3.5" />
                     <span>Print</span>
@@ -290,18 +294,45 @@ export function NotesView({
 
               {readingMode === 'detailed' ? (
                 <div className="space-y-6">
-                  <div>
-                    <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 mb-1">
-                      1. Concept &amp; Fundamentals
+                  <div className="space-y-2">
+                    <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">
+                      1. Concept &amp; Intuition
                     </h3>
                     <p className="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
                       {activeChapter.introduction.meaning} {activeChapter.fundamentalConcept.overview}
                     </p>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">
+                      <span className="font-semibold text-slate-800 dark:text-slate-200">Why it matters: </span>
+                      {activeChapter.introduction.importance}
+                    </p>
                   </div>
+
+                  {activeChapter.fundamentalConcept.terms.length > 0 && (
+                    <div className="space-y-2">
+                      <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">
+                        Key Terms to Know
+                      </h3>
+                      <dl className="divide-y divide-slate-100 dark:divide-slate-800 border border-[#DCE3DC] dark:border-[#253830] rounded-lg">
+                        {activeChapter.fundamentalConcept.terms.map((t) => (
+                          <div key={t.term} className="p-3 flex flex-col sm:flex-row sm:gap-4 text-sm">
+                            <dt className="sm:w-48 shrink-0 font-semibold text-[#1B4332] dark:text-[#8CE0B0]">
+                              {t.term}
+                            </dt>
+                            <dd className="text-slate-700 dark:text-slate-300">{t.meaning}</dd>
+                          </div>
+                        ))}
+                      </dl>
+                    </div>
+                  )}
 
                   {activeChapter.detailedExplanation.map((sec, idx) => (
                     <div key={idx} className="space-y-2.5">
                       <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">{sec.heading}</h3>
+                      {sec.paragraphs?.map((p, i) => (
+                        <p key={i} className="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
+                          {p}
+                        </p>
+                      ))}
                       {sec.steps && (
                         <ol className="list-decimal pl-5 space-y-1.5 text-sm sm:text-base text-slate-700 dark:text-slate-300">
                           {sec.steps.map((s, i) => (
@@ -317,10 +348,13 @@ export function NotesView({
                         </ul>
                       )}
                       {sec.table && (
-                        <div className="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-800">
+                        <div className="overflow-x-auto rounded-lg border border-[#DCE3DC] dark:border-[#253830]">
                           <table className="w-full text-left border-collapse text-xs sm:text-sm tabular-nums">
+                            <caption className="px-3 py-2 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/50 border-b border-[#DCE3DC] dark:border-[#253830]">
+                              {sec.table.caption}
+                            </caption>
                             <thead>
-                              <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50">
+                              <tr className="border-b border-[#DCE3DC] dark:border-[#253830] bg-slate-50 dark:bg-slate-900/50">
                                 {sec.table.headers.map((h) => (
                                   <th key={h} className="px-3 py-2 font-semibold">{h}</th>
                                 ))}
@@ -343,16 +377,29 @@ export function NotesView({
 
                   <TopicDiagram type={activeChapter.diagramType} caption={activeChapter.diagramCaption} />
 
+                  <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 space-y-2">
+                    <div className="flex items-center gap-2 text-amber-700 dark:text-amber-300">
+                      <Lightbulb className="w-4 h-4 shrink-0" />
+                      <h3 className="text-sm sm:text-base font-bold">Tips to Remember &amp; Memory Tricks</h3>
+                    </div>
+                    <ul className="list-disc pl-5 space-y-1 text-sm text-slate-700 dark:text-slate-300">
+                      {activeChapter.quickRevision.examReminders.map((r, i) => (
+                        <li key={i}>{r}</li>
+                      ))}
+                    </ul>
+                  </div>
+
                   <div className="space-y-3">
-                    <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">Formulas &amp; Worked Answer</h3>
+                    <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">Formulas &amp; Worked Examples</h3>
                     {activeChapter.formulas.map((f) => (
-                      <div key={f.id} className="rounded-lg bg-slate-50 dark:bg-slate-900/60 p-3.5 border border-slate-200 dark:border-slate-800">
-                        <p className="text-xs font-semibold text-sky-600 dark:text-sky-400">{f.name}</p>
+                      <div key={f.id} className="rounded-lg bg-slate-50 dark:bg-slate-900/60 p-3.5 border border-[#DCE3DC] dark:border-[#253830]">
+                        <p className="text-xs font-semibold text-[#0F766E] dark:text-[#2DD4BF]">{f.name}</p>
                         <MathBlock latex={f.latex} />
+                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Example: {f.miniExample}</p>
                       </div>
                     ))}
                     {activeChapter.workedExamples.map((ex) => (
-                      <div key={ex.id} className="rounded-lg border border-slate-200 dark:border-slate-800 p-4 space-y-1.5 text-sm">
+                      <div key={ex.id} className="rounded-lg border border-[#DCE3DC] dark:border-[#253830] p-4 space-y-1.5 text-sm">
                         <p className="font-bold text-slate-900 dark:text-slate-100">{ex.title}</p>
                         <p className="text-slate-600 dark:text-slate-300">{ex.problemStatement}</p>
                         <p className="font-semibold text-emerald-600 dark:text-emerald-400">Answer: {ex.finalAnswer}</p>
@@ -366,10 +413,10 @@ export function NotesView({
                     <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 mb-2">
                       Key Definitions
                     </h3>
-                    <dl className="divide-y divide-slate-100 dark:divide-slate-800 border border-slate-200 dark:border-slate-800 rounded-lg">
+                    <dl className="divide-y divide-slate-100 dark:divide-slate-800 border border-[#DCE3DC] dark:border-[#253830] rounded-lg">
                       {activeChapter.quickRevision.keyDefinitions.map((kd) => (
                         <div key={kd.term} className="p-3 flex flex-col sm:flex-row sm:gap-4 text-sm">
-                          <dt className="sm:w-44 shrink-0 font-bold text-sky-600 dark:text-sky-400">{kd.term}</dt>
+                          <dt className="sm:w-44 shrink-0 font-bold text-[#0F766E] dark:text-[#2DD4BF]">{kd.term}</dt>
                           <dd className="text-slate-700 dark:text-slate-300">{kd.definition}</dd>
                         </div>
                       ))}
@@ -387,22 +434,51 @@ export function NotesView({
                     </ul>
                   </div>
 
+                  {activeChapter.quickRevision.keyDifferences && (
+                    <div className="overflow-x-auto rounded-lg border border-[#DCE3DC] dark:border-[#253830]">
+                      <table className="w-full text-left border-collapse text-xs sm:text-sm tabular-nums">
+                        <caption className="px-3 py-2 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/50 border-b border-[#DCE3DC] dark:border-[#253830]">
+                          {activeChapter.quickRevision.keyDifferences.caption}
+                        </caption>
+                        <thead>
+                          <tr className="border-b border-[#DCE3DC] dark:border-[#253830] bg-slate-50 dark:bg-slate-900/50">
+                            {activeChapter.quickRevision.keyDifferences.headers.map((h) => (
+                              <th key={h} className="px-3 py-2 font-semibold">{h}</th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                          {activeChapter.quickRevision.keyDifferences.rows.map((r, ri) => (
+                            <tr key={ri}>
+                              {r.map((c, ci) => (
+                                <td key={ci} className="px-3 py-2 text-slate-700 dark:text-slate-300">{c}</td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+
                   <div>
                     <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 mb-2">
                       Formula Snapshot
                     </h3>
-                    {activeChapter.formulas.map((f) => (
-                      <div key={f.id} className="rounded-lg bg-slate-50 dark:bg-slate-900/60 p-3 border border-slate-200 dark:border-slate-800">
-                        <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">{f.name}</p>
-                        <MathBlock latex={f.latex} />
-                      </div>
-                    ))}
+                    <div className="space-y-2.5">
+                      {activeChapter.formulas.map((f) => (
+                        <div key={f.id} className="rounded-lg bg-slate-50 dark:bg-slate-900/60 p-3 border border-[#DCE3DC] dark:border-[#253830]">
+                          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">{f.name}</p>
+                          <MathBlock latex={f.latex} />
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
-                  <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-4">
-                    <h3 className="text-sm font-bold text-amber-700 dark:text-amber-300 mb-1.5">
-                      Exam Preparation Tips
-                    </h3>
+                  <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 space-y-2">
+                    <div className="flex items-center gap-2 text-amber-700 dark:text-amber-300">
+                      <Lightbulb className="w-4 h-4 shrink-0" />
+                      <h3 className="text-sm font-bold">Tips to Remember &amp; Exam Reminders</h3>
+                    </div>
                     <ul className="list-disc pl-5 space-y-1 text-sm text-slate-700 dark:text-slate-300">
                       {activeChapter.quickRevision.examReminders.map((r, i) => (
                         <li key={i}>{r}</li>

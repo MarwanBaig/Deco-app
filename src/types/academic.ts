@@ -132,6 +132,8 @@ export interface Unit {
   title: string;
   syllabusExactText: string;
   description: string;
+  learningObjectives?: string[];
+  unitOutcome?: string;
   chapters: Chapter[];
 }
 
@@ -143,6 +145,7 @@ export interface ExamQuestion {
   chapterId: string;
   topicName: string;
   marks: ExamQuestionMark;
+  isImportant?: boolean;
   sourceLabel: 'Generated Practice Question (U24EC304 Syllabus)';
   question: string;
   answerSections: {
@@ -174,6 +177,8 @@ export interface QuizAttempt {
   score: number;
   total: number;
   percentage: number;
+  mode?: 'practice' | 'timed-mock' | 'mistake-drill';
+  durationSeconds?: number;
   timestamp: string;
 }
 
@@ -185,21 +190,89 @@ export interface RecentActivityItem {
   timestamp: string;
 }
 
+export interface MistakeRecord {
+  id: string;
+  questionId: string;
+  unitId: UnitId;
+  chapterId: string;
+  topicName: string;
+  prompt: string;
+  userAnswer: string;
+  correctAnswer: string;
+  explanation: string;
+  timestamp: string;
+  resolved: boolean;
+}
+
+export interface StudyHistoryItem {
+  id: string;
+  area: 'lesson' | 'notes' | 'lab' | 'quiz' | 'exam' | 'tutor';
+  title: string;
+  unitId?: UnitId;
+  chapterId?: string;
+  detail: string;
+  timestamp: string;
+}
+
+export interface LessonMistakeItem {
+  mistake: string;
+  correction: string;
+}
+
+export interface LessonEnrichment {
+  learningObjectives: string[];
+  commonMistakes: LessonMistakeItem[];
+  notebookNotes: string[];
+}
+
+export type TutorDifficulty = 'beginner' | 'intermediate' | 'exam';
+export type TutorMode = 'explain' | 'solve' | 'mistake' | 'practice' | 'diagram';
+
+export type StudyBackdropId = 'minimal' | 'mountains' | 'forest' | 'lake' | 'sunset';
+export type ReadingComfort = 'standard' | 'relaxed';
+
+export interface StudyPreferences {
+  backdrop: StudyBackdropId;
+  readingComfort: ReadingComfort;
+}
+
+export interface StudentUser {
+  id: string;
+  fullName: string;
+  email: string;
+  preferences?: StudyPreferences;
+}
+
 export interface UserProgress {
   completedChapters: string[];
   favouriteChapters: string[];
   checkedUnderstanding: Record<string, number[]>;
+  lessonSectionsViewed: Record<string, string[]>;
+  savedExamQuestions: string[];
+  mistakes: MistakeRecord[];
   quizAttempts: QuizAttempt[];
   recentActivity: RecentActivityItem[];
+  studyHistory: StudyHistoryItem[];
   lastVisitedChapterId: string | null;
 }
 
 export type AppRoute =
+  | { page: 'welcome' }
+  | { page: 'auth'; mode: 'login' | 'signup' | 'forgot' }
   | { page: 'dashboard' }
   | { page: 'unit'; unitId: UnitId }
   | { page: 'chapter'; chapterId: string }
   | { page: 'notes'; chapterId?: string }
-  | { page: 'exam-prep'; unitId?: UnitId }
+  | { page: 'exam-prep'; unitId?: UnitId; tab?: 'bank' | 'mock' | 'mistakes' | 'revision' }
   | { page: 'lab'; simulator?: string }
   | { page: 'quizzes'; unitId?: UnitId | 'mixed' }
-  | { page: 'formulas'; unitId?: UnitId };
+  | { page: 'formulas'; unitId?: UnitId }
+  | {
+      page: 'tutor';
+      unitId?: UnitId;
+      chapterId?: string;
+      initialPrompt?: string;
+      mode?: TutorMode;
+      difficulty?: TutorDifficulty;
+    };
+

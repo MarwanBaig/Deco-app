@@ -44,9 +44,9 @@ export function SearchModal({ open, onClose, onNavigate }: SearchModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center bg-slate-950/70 pt-16 px-4" role="dialog" aria-modal="true">
-      <div className="w-full max-w-2xl rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#11192B] shadow-2xl overflow-hidden">
-        <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-200 dark:border-slate-800">
-          <Search className="w-5 h-5 text-sky-500 shrink-0" />
+      <div className="w-full max-w-2xl rounded-xl border border-[#DCE3DC] dark:border-[#253830] bg-white dark:bg-[#13201B] shadow-2xl overflow-hidden">
+        <div className="flex items-center gap-3 px-4 py-3 border-b border-[#DCE3DC] dark:border-[#253830]">
+          <Search className="w-5 h-5 text-[#0F766E] dark:text-[#2DD4BF] shrink-0" />
           <input
             autoFocus
             type="text"
@@ -85,7 +85,7 @@ export function SearchModal({ open, onClose, onNavigate }: SearchModalProps) {
                 className="w-full text-left px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer"
               >
                 <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-                  <span className="font-semibold text-sky-600 dark:text-sky-400">
+                  <span className="font-semibold text-[#0F766E] dark:text-[#2DD4BF]">
                     {r.unitNumber} {r.chapterTitle ? `· ${r.chapterTitle}` : ''}
                   </span>
                   <span className="capitalize">{r.type}</span>

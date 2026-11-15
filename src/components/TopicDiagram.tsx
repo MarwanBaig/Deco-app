@@ -3,18 +3,147 @@ import { DiagramType } from '../types/academic';
 interface TopicDiagramProps {
   type: DiagramType;
   caption: string;
+  showFlowchart?: boolean;
 }
 
-export function TopicDiagram({ type, caption }: TopicDiagramProps) {
+export function TopicDiagram({ type, caption, showFlowchart = true }: TopicDiagramProps) {
   return (
-    <figure className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-[#0F172A] p-4 sm:p-5">
-      <div className="overflow-x-auto">{renderSvg(type)}</div>
-      <figcaption className="mt-3 text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-        <span className="font-semibold text-slate-800 dark:text-slate-200">Figure: </span>
-        {caption}
-      </figcaption>
-    </figure>
+    <div className="space-y-4">
+      <figure className="rounded-xl border border-[#DCE3DC] dark:border-[#253830] bg-slate-50/80 dark:bg-[#13201B] p-4 sm:p-5">
+        <p className="text-xs font-semibold text-[#0F766E] dark:text-[#2DD4BF] mb-3">
+          Circuit &amp; Architecture Diagram
+        </p>
+        <div className="overflow-x-auto">{renderSvg(type)}</div>
+        <figcaption className="mt-3 text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+          <span className="font-semibold text-slate-800 dark:text-slate-200">Figure: </span>
+          {caption}
+        </figcaption>
+      </figure>
+
+      {showFlowchart && (
+        <figure className="rounded-xl border border-[#DCE3DC] dark:border-[#253830] bg-slate-50/80 dark:bg-[#13201B] p-4 sm:p-5">
+          <p className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 mb-3">
+            Step-by-Step Method Flowchart
+          </p>
+          <div className="overflow-x-auto">{renderFlowchartSvg(type)}</div>
+        </figure>
+      )}
+    </div>
   );
+}
+
+function FlowchartRow({ steps, accent = '#38BDF8' }: { steps: string[]; accent?: string }) {
+  const boxW = 148;
+  const gap = 28;
+  const totalW = steps.length * boxW + (steps.length - 1) * gap + 20;
+
+  return (
+    <svg viewBox={`0 0 ${totalW} 86`} className="w-full min-w-[540px] max-w-3xl mx-auto text-slate-800 dark:text-slate-100" role="img" aria-label="Step-by-step concept flowchart">
+      {steps.map((step, i) => {
+        const x = 10 + i * (boxW + gap);
+        return (
+          <g key={i}>
+            <rect
+              x={x}
+              y={14}
+              width={boxW}
+              height={56}
+              rx={10}
+              fill="none"
+              stroke={accent}
+              strokeWidth="1.7"
+            />
+            <text x={x + 10} y={31} fontSize="10" fontWeight="700" fill={accent}>
+              Step {i + 1}
+            </text>
+            <text x={x + 10} y={48} fontSize="11" fontWeight="600" fill="currentColor">
+              {step.length > 21 ? step.slice(0, 20) + '…' : step}
+            </text>
+            {step.length > 21 && (
+              <text x={x + 10} y={62} fontSize="10" fill="#94A3B8">
+                {step.slice(20, 42)}
+              </text>
+            )}
+            {i < steps.length - 1 && (
+              <>
+                <line
+                  x1={x + boxW}
+                  y1={42}
+                  x2={x + boxW + gap - 5}
+                  y2={42}
+                  stroke={accent}
+                  strokeWidth="1.8"
+                />
+                <polygon
+                  points={`${x + boxW + gap},${42} ${x + boxW + gap - 7},${38} ${x + boxW + gap - 7},${46}`}
+                  fill={accent}
+                />
+              </>
+            )}
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+function renderFlowchartSvg(type: DiagramType) {
+  switch (type) {
+    case 'number-systems-radix':
+      return <FlowchartRow steps={['Split Int & Fraction', 'Int: Divide by r ↑', 'Frac: Multiply r ↓', 'Combine Results']} accent="#38BDF8" />;
+    case 'complements-arithmetic':
+      return <FlowchartRow steps={['Pad to n Bits', 'Take 2’s Comp of N', 'Add M + Comp(N)', 'Check End-Carry']} accent="#818CF8" />;
+    case 'codes-bcd-gray':
+      return <FlowchartRow steps={['Copy MSB Directly', 'XOR Adjacent Bits', 'Repeat Left→Right', 'Verify 1-Bit Step']} accent="#22D3EE" />;
+    case 'hamming-parity':
+      return <FlowchartRow steps={['Find p: 2ᵖ ≥ m+p+1', 'Place P at 2⁰,2¹,2²', 'Compute Even Parity', 'Syndrome Fixes Bit']} accent="#38BDF8" />;
+    case 'boolean-theorems':
+    case 'algebraic-simplification':
+      return <FlowchartRow steps={['Apply De Morgan', 'Factor Common Term', 'Use X+X\'=1 & Absorb', 'Drop Consensus Term']} accent="#818CF8" />;
+    case 'canonical-sop-pos':
+      return <FlowchartRow steps={['Read Truth Table', '1-Rows → Minterms', '0-Rows → Maxterms', 'Expand Missing Vars']} accent="#38BDF8" />;
+    case 'logic-gates-symbols':
+      return <FlowchartRow steps={['Write SOP / POS', 'SOP → NAND–NAND', 'POS → NOR–NOR', 'Invert Single Vars']} accent="#22D3EE" />;
+    case 'kmap-4var':
+      return <FlowchartRow steps={['Label Gray 00,01,11,10', 'Plot 1s and X', 'Form Largest 2ᵏ Box', 'Pick Essential PIs']} accent="#38BDF8" />;
+    case 'quine-mccluskey':
+      return <FlowchartRow steps={['Group by # of 1s', 'Merge 1-Bit Diffs', 'Repeat Until Prime', 'Solve PI Chart']} accent="#818CF8" />;
+    case 'half-full-adder':
+    case 'subtractor-adder':
+      return <FlowchartRow steps={['Compute Sum (A⊕B)', 'XOR With Carry/B_in', 'Combine Carries/Bor', 'Cascade n Stages']} accent="#38BDF8" />;
+    case 'magnitude-comparator':
+      return <FlowchartRow steps={['Check MSB Pair First', 'Compute xᵢ = Aᵢ⊙Bᵢ', 'If Tie → Next Bit', 'Output > , = , or <']} accent="#22D3EE" />;
+    case 'multiplexer-4to1':
+    case 'demultiplexer-1to4':
+    case 'encoder-decoder':
+      return <FlowchartRow steps={['Assign Select Lines', 'Split Minterm Table', 'Map 0, 1, A, or A\'', 'Wire Data Inputs']} accent="#818CF8" />;
+    case 'comb-vs-seq':
+    case 'sr-latch-nor-nand':
+    case 'sr-d-flipflop':
+    case 'jk-master-slave-t':
+      return <FlowchartRow steps={['Check Clock Edge ↑/↓', 'Sample Inputs J,K/D', 'Update Next Q(t+1)', 'Hold Until Next Edge']} accent="#38BDF8" />;
+    case 'excitation-tables':
+    case 'flipflop-conversion':
+      return <FlowchartRow steps={['Target Char. Table', 'Match Available Exc.', 'Plot K-Map Inputs', 'Wire Adapter Gates']} accent="#818CF8" />;
+    case 'computer-block-diagram':
+    case 'bus-structures':
+    case 'stored-program-registers':
+    case 'instruction-formats':
+      return <FlowchartRow steps={['MAR ← PC & Read', 'MDR → IR; PC + 1', 'Decode Opcode/Mode', 'ALU Execute & Store']} accent="#38BDF8" />;
+    case 'io-interrupts':
+    case 'dma-controller':
+    case 'async-strobe-handshake':
+      return <FlowchartRow steps={['Init Addr & Count', 'Assert Bus Req (BR)', 'CPU Sends BG (Hi-Z)', 'Transfer & INTR Done']} accent="#22D3EE" />;
+    case 'memory-hierarchy':
+    case 'semiconductor-ram':
+    case 'rom-architecture':
+    case 'primary-auxiliary':
+      return <FlowchartRow steps={['CPU Requests Addr', 'Check Fast SRAM L1', 'Miss → Fetch DRAM', 'Page Miss → Disk']} accent="#38BDF8" />;
+    case 'associative-cam':
+    case 'cache-mapping':
+    case 'virtual-memory-paging':
+      return <FlowchartRow steps={['Split Tag/Set/Offset', 'Index Cache Set', 'Compare Tags + Valid', 'Hit Data / Miss Fill']} accent="#818CF8" />;
+  }
 }
 
 function renderSvg(type: DiagramType) {
@@ -48,7 +177,6 @@ function renderSvg(type: DiagramType) {
           <polygon points="516,49 508,45 508,53" fill="#22D3EE" />
           <text x="463" y="40" textAnchor="middle" fontSize="10" fill="#22D3EE">4-bit groups</text>
 
-          {/* Positional Weight Strip */}
           <text x="20" y="114" fontSize="12" fontWeight="600" fill="currentColor">Binary Positional Weights (1011.01)₂:</text>
           {[
             { bit: '1', wt: '2³ = 8' },
@@ -159,7 +287,6 @@ function renderSvg(type: DiagramType) {
     case 'logic-gates-symbols':
       return (
         <svg viewBox="0 0 680 210" className="w-full max-w-2xl mx-auto text-slate-700 dark:text-slate-200" role="img" aria-label="Standard logic gate symbols">
-          {/* AND */}
           <g transform="translate(20,20)">
             <line x1="0" y1="12" x2="25" y2="12" stroke={stroke} strokeWidth="1.6" />
             <line x1="0" y1="32" x2="25" y2="32" stroke={stroke} strokeWidth="1.6" />
@@ -167,7 +294,6 @@ function renderSvg(type: DiagramType) {
             <line x1="68" y1="22" x2="95" y2="22" stroke={stroke} strokeWidth="1.6" />
             <text x="48" y="58" textAnchor="middle" fontSize="11" fontWeight="700">AND (A·B)</text>
           </g>
-          {/* OR */}
           <g transform="translate(185,20)">
             <line x1="0" y1="12" x2="28" y2="12" stroke={stroke} strokeWidth="1.6" />
             <line x1="0" y1="32" x2="28" y2="32" stroke={stroke} strokeWidth="1.6" />
@@ -175,7 +301,6 @@ function renderSvg(type: DiagramType) {
             <line x1="70" y1="22" x2="95" y2="22" stroke={stroke} strokeWidth="1.6" />
             <text x="48" y="58" textAnchor="middle" fontSize="11" fontWeight="700">OR (A+B)</text>
           </g>
-          {/* NOT */}
           <g transform="translate(350,20)">
             <line x1="0" y1="22" x2="25" y2="22" stroke={stroke} strokeWidth="1.6" />
             <polygon points="25,6 25,38 56,22" fill="none" stroke="#38BDF8" strokeWidth="2" />
@@ -183,7 +308,6 @@ function renderSvg(type: DiagramType) {
             <line x1="66" y1="22" x2="95" y2="22" stroke={stroke} strokeWidth="1.6" />
             <text x="48" y="58" textAnchor="middle" fontSize="11" fontWeight="700">NOT (A')</text>
           </g>
-          {/* NAND */}
           <g transform="translate(515,20)">
             <line x1="0" y1="12" x2="25" y2="12" stroke={stroke} strokeWidth="1.6" />
             <line x1="0" y1="32" x2="25" y2="32" stroke={stroke} strokeWidth="1.6" />
@@ -192,7 +316,6 @@ function renderSvg(type: DiagramType) {
             <line x1="78" y1="22" x2="100" y2="22" stroke={stroke} strokeWidth="1.6" />
             <text x="50" y="58" textAnchor="middle" fontSize="11" fontWeight="700" fill="#22D3EE">NAND (Universal)</text>
           </g>
-          {/* NOR */}
           <g transform="translate(95,120)">
             <line x1="0" y1="12" x2="28" y2="12" stroke={stroke} strokeWidth="1.6" />
             <line x1="0" y1="32" x2="28" y2="32" stroke={stroke} strokeWidth="1.6" />
@@ -201,7 +324,6 @@ function renderSvg(type: DiagramType) {
             <line x1="80" y1="22" x2="105" y2="22" stroke={stroke} strokeWidth="1.6" />
             <text x="52" y="58" textAnchor="middle" fontSize="11" fontWeight="700" fill="#22D3EE">NOR (Universal)</text>
           </g>
-          {/* XOR */}
           <g transform="translate(290,120)">
             <line x1="0" y1="12" x2="22" y2="12" stroke={stroke} strokeWidth="1.6" />
             <line x1="0" y1="32" x2="22" y2="32" stroke={stroke} strokeWidth="1.6" />
@@ -210,7 +332,6 @@ function renderSvg(type: DiagramType) {
             <line x1="72" y1="22" x2="98" y2="22" stroke={stroke} strokeWidth="1.6" />
             <text x="50" y="58" textAnchor="middle" fontSize="11" fontWeight="700" fill="#818CF8">XOR (A ⊕ B)</text>
           </g>
-          {/* XNOR */}
           <g transform="translate(475,120)">
             <line x1="0" y1="12" x2="22" y2="12" stroke={stroke} strokeWidth="1.6" />
             <line x1="0" y1="32" x2="22" y2="32" stroke={stroke} strokeWidth="1.6" />
@@ -258,9 +379,7 @@ function renderSvg(type: DiagramType) {
               );
             })
           )}
-          {/* Quad highlight CD */}
           <rect x="286" y="73" width="67" height="138" rx="8" fill="none" stroke="#38BDF8" strokeWidth="2.2" />
-          {/* Quad highlight A'B' */}
           <rect x="136" y="73" width="292" height="30" rx="8" fill="none" stroke="#818CF8" strokeWidth="2.2" />
           <text x="460" y="105" fontSize="11" fontWeight="600" fill="#818CF8">Quad 1 (Row 00): A'B'</text>
           <text x="460" y="130" fontSize="11" fontWeight="600" fill="#38BDF8">Quad 2 (Col 11): CD</text>
@@ -350,15 +469,12 @@ function renderSvg(type: DiagramType) {
           <line x1="315" y1="55" x2="430" y2="55" stroke="#10B981" strokeWidth="1.6" />
           <text x="440" y="59" fontSize="12" fontWeight="700" fill="#10B981">Outputs Z(t)</text>
 
-          {/* Next State path */}
           <polyline points="315,78 360,78 360,149 305,149" fill="none" stroke="#22D3EE" strokeWidth="1.6" />
           <text x="370" y="116" fontSize="10" fill="#22D3EE">Next State Q(t+1)</text>
 
-          {/* Present State feedback */}
           <polyline points="165,149 90,149 90,82 135,82" fill="none" stroke="#818CF8" strokeWidth="1.6" />
           <text x="95" y="118" fontSize="10" fill="#818CF8">Present State Q(t)</text>
 
-          {/* Clock */}
           <line x1="80" y1="175" x2="165" y2="165" stroke="#F59E0B" strokeWidth="1.4" />
           <text x="35" y="178" fontSize="11" fontWeight="700" fill="#F59E0B">Clock (CLK)</text>
         </svg>
@@ -368,10 +484,8 @@ function renderSvg(type: DiagramType) {
       return (
         <svg viewBox="0 0 680 185" className="w-full max-w-2xl mx-auto text-slate-700 dark:text-slate-200" role="img" aria-label="Cross-coupled NOR SR Latch">
           <text x="20" y="24" fontSize="12" fontWeight="700" fill="#38BDF8">Cross-Coupled NOR SR Latch (Active-High S, R)</text>
-          {/* Top NOR (R) */}
           <path d="M200,45 Q214,63 200,81 Q230,81 248,63 Q230,45 200,45 Z" fill="none" stroke="#38BDF8" strokeWidth="2" />
           <circle cx="253" cy="63" r="4.5" fill="none" stroke="#38BDF8" strokeWidth="2" />
-          {/* Bottom NOR (S) */}
           <path d="M200,115 Q214,133 200,151 Q230,151 248,133 Q230,115 200,115 Z" fill="none" stroke="#818CF8" strokeWidth="2" />
           <circle cx="253" cy="133" r="4.5" fill="none" stroke="#818CF8" strokeWidth="2" />
 
@@ -386,7 +500,6 @@ function renderSvg(type: DiagramType) {
           <line x1="258" y1="133" x2="360" y2="133" stroke="#22D3EE" strokeWidth="1.8" />
           <text x="370" y="137" fontSize="13" fontWeight="700" fill="#22D3EE">Q'</text>
 
-          {/* Cross coupling */}
           <polyline points="295,63 295,88 175,112 175,123 203,123" fill="none" stroke="#10B981" strokeWidth="1.4" />
           <polyline points="315,133 315,105 175,85 175,73 203,73" fill="none" stroke="#22D3EE" strokeWidth="1.4" />
 
@@ -426,7 +539,6 @@ function renderSvg(type: DiagramType) {
           <line x1="470" y1="112" x2="545" y2="112" stroke="#22D3EE" strokeWidth="1.8" />
           <text x="558" y="116" fontSize="13" fontWeight="700" fill="#22D3EE">Q'</text>
 
-          {/* Clock + Inverter */}
           <line x1="65" y1="158" x2="300" y2="158" stroke="#F59E0B" strokeWidth="1.6" />
           <text x="32" y="162" fontSize="12" fontWeight="700" fill="#F59E0B">CLK</text>
           <line x1="197" y1="158" x2="197" y2="132" stroke="#F59E0B" strokeWidth="1.5" />
@@ -439,6 +551,7 @@ function renderSvg(type: DiagramType) {
     case 'computer-block-diagram':
     case 'bus-structures':
     case 'stored-program-registers':
+    case 'instruction-formats':
       return (
         <svg viewBox="0 0 680 215" className="w-full max-w-2xl mx-auto text-slate-700 dark:text-slate-200" role="img" aria-label="Digital Computer Block Diagram and Bus Structure">
           <rect x="25" y="35" width="110" height="58" rx="8" fill="none" stroke="#38BDF8" strokeWidth="1.8" />
@@ -458,7 +571,6 @@ function renderSvg(type: DiagramType) {
           <rect x="545" y="35" width="110" height="58" rx="8" fill="none" stroke="#10B981" strokeWidth="1.8" />
           <text x="600" y="68" textAnchor="middle" fontSize="12" fontWeight="700">Output Unit</text>
 
-          {/* System Bus */}
           <line x1="25" y1="160" x2="655" y2="160" stroke="#38BDF8" strokeWidth="2.5" />
           <line x1="25" y1="175" x2="655" y2="175" stroke="#818CF8" strokeWidth="2.5" />
           <line x1="25" y1="190" x2="655" y2="190" stroke="#22D3EE" strokeWidth="2" strokeDasharray="5,4" />
@@ -524,7 +636,6 @@ function renderSvg(type: DiagramType) {
           <polygon points="179,156 501,156 545,196 135,196" fill="none" stroke="#10B981" strokeWidth="1.8" />
           <text x="340" y="181" textAnchor="middle" fontSize="12" fontWeight="700" fill="#10B981">Auxiliary Storage (SSD · HDD · Optical · Tape)</text>
 
-          {/* Left/Right Trade-off Arrows */}
           <line x1="85" y1="185" x2="85" y2="30" stroke="#38BDF8" strokeWidth="1.8" />
           <polygon points="85,26 80,35 90,35" fill="#38BDF8" />
           <text x="72" y="100" textAnchor="middle" fontSize="11" fontWeight="700" fill="#38BDF8" transform="rotate(-90 72 100)">Speed &amp; Cost/Bit ↑</text>
